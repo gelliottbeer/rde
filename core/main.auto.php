@@ -9,6 +9,6 @@
 
 		}
 
-		private function web() { var_dump(single\http\request::i()); }
+		private function web() {}
 
         }
