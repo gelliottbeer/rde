@@ -13,7 +13,7 @@
 		public static function init() { return self::$singleton ? self::$singleton : self::$singleton = new static; }
 
 		public function setCode($code) { $this->code = (int)$code; return $this; }
-		public function setContent($content, $append = true) { $this->content = $append ? $this->content . (string)$content : (string)$content; return $this; }
+		public function setContent($content = '', $append = false) { $this->content = $append ? $this->content . (string)$content : (string)$content; return $this; }
 		public function setHeader($header, $value) { $this->headers[(string)$header] = $value; return $this; }
 		public function setHeadersArray(array $headers) { foreach($headers as $header => $value) $this->setHeader($header, $value); return $this; }
 		private function setCodeSent($bool = true) { $this->codeSent = (bool)$bool; return $this; }

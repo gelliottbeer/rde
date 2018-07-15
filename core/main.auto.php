@@ -13,18 +13,48 @@
 
 			$response = http\response::init();
 			try {
-
+				$routes = http\routes::init();
+				$controller = $routes->getController();
+				$parameters = $routes->getParameters();
+				if(!$controller) throw new http\missingException();
+				else {
+					
+				}
 			}
-			catch(http\errorException $error) {}
-			catch(http\missingException $missing) {}
-			catch(http\redirectException $redirect) {}
-			catch(http\authenticationExceotion $authentication) {}
-			catch(http\authorizationException $authoorization) {}
+			catch(http\errorException $error) {
+				$response->unsetHeadersArray()
+					->setCode(500)
+					->setContent(NULL);
+			}
+			catch(http\missingException $missing) {
+				$response->unsetHeadersArray()
+					->setCode(404)
+					->setContent(NULL);
+			}
+			catch(http\redirectException $redirect) {
+				$location = $redirect->getLocation();
+				$response->unsetHeadersArray()
+					->setHeader('Location', $location)
+					->setCode(303)
+					->setContent(NULL);
+			}
+			catch(http\authenticationExceotion $authentication) {
+				$location = $authentication->getLocation();
+				$response->unsetHeadersArray()
+					->setCode(403)
+					->setContent(NULL);
+				if($location) $response->setHeader('Location', $location);
+			}
+			catch(http\authorizationException $authorization) {
+				$response->unsetHeadersArray()
+					->setCode(403)
+					->setContent(NULL);
+			}
 			finally {
 				$buffers = [];
 				while(ob_get_level() > 1) $buffers[] = ob_get_clean();
 				$buffers = array_reverse($buffers);
-				foreach($buffers as $buffer) echo $buffer;
+				if(config::init()->getValue('debug')) foreach($buffers as $buffer) echo $buffer;
 				$response->sendAll();
 			}
 
