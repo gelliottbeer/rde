@@ -29,10 +29,15 @@
 			$buffer = '';
 			$controllerClass = '\\rde\\controllers\\' . $this->getController();
 			$controller = new $controllerClass;
-			$function = $this->getAm();
-			ob_start();
-			$this->$function($controller);
-			$buffer = ob_get_clean();
+			if($controller) {
+				$function = $this->getAm();
+				if(!method_exists($controller, $function)) trigger_error($function . ' undefined in class ' . $controllerClass);
+				else {
+					ob_start();
+					$this->$function($controller);
+					$buffer = ob_get_clean();
+				}
+			}
 			return $buffer;
 
 		}
@@ -45,6 +50,7 @@
 				$data = isset($controller->data) ? $controller->data : [];
 				include($viewFilepath);
 			}
+			return $this;
 
 		}
 
