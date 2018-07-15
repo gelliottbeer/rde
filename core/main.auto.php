@@ -18,7 +18,8 @@
 				$parameters = $routes->getParameters();
 				if(!$controller) throw new http\missingException();
 				else {
-					
+					$controller = new controller($controller, $parameters, RDE_AM);
+					$response->setContent($controller->render());
 				}
 			}
 			catch(http\errorException $error) {
