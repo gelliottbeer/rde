@@ -2,6 +2,8 @@
 
 	class home {
 
+		private $data = [];
+
 		public function web() {}
 
 	}
